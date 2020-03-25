@@ -1,0 +1,3 @@
+[submodule "arugula"]
+	path = arugula
+	url = https://github.com/alclol/arugula.git
