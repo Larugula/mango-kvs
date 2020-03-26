@@ -1,29 +1,30 @@
-#ifndef KVS_INCLUDE_KVS_COMMON_HPP_
-#define KVS_INCLUDE_KVS_COMMON_HPP_
+
 
 #include <unordered_map>
-// TODO: include
+#include "arugula/include/lattice_core.hpp"
+#include "arugula/include/merges/vector_clock_mrg.hpp"
+#include "arugula/include/merges/causal_mrg.hpp"
 
-template<typename V>
+template<typename T>
 struct Value {
     VectorClock vc;
-    V value;
+    T value;
 };
 
 template <typename K, typename V> 
 class KVStore {
 protected:
-  std::unordered_map<K, Lattice<struct Value, CasualMerge{}> > store;
+  std::unordered_map<K, Lattice<Value<V>, CausalMerge> > store;
 
 public:
   KVStore<K, V>() {}
-  KVStore<K, V>(std::unordered_map<K, Lattice<struct Value, CasualMerge{}> &other) : store(other) { }
+  KVStore<K, V>(std::unordered_map<K, Lattice<Value<V>, CausalMerge>> &other) : store(other) { }
 
-  struct Value get(const K &k) {
+  Value<V> get(const K &k) {
     return store.at(k).reveal();
   }
 
-  void put(const K &k, struct Value &v) { 
+  void put(const K &k, Value<V> &v) {
     if (store.find(k) != store.end())
         store.at(k).merge(v);
     else 
