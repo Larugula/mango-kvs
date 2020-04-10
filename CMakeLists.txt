@@ -7,7 +7,8 @@ project(mango
 set(CMAKE_CXX_STANDARD 17)
 Set(CMAKE_CXX_STANDARD_REQUIRED YES)
 
-add_executable(mango base_kvs.hpp)
-set_target_properties(mango PROPERTIES LINKER_LANGUAGE CXX)
+add_library(mango_kvs INTERFACE)
+add_executable(tester tester.cpp)
+target_link_libraries(tester mango_kvs)
 
 add_subdirectory(arugula)
