@@ -3,30 +3,24 @@
 #include "arugula/include/merges/vector_clock_mrg.hpp"
 #include "arugula/include/merges/causal_mrg.hpp"
 #include "arugula/include/merges/tuple_mrg.hpp"
+#include "transform.cpp"
 
-template <typename K, typename V>
+template <typename K, class T, class Func>
 class KVStore {
 protected:
-  Lattice<std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>>, MapUnion> store;
+  Lattice<std::map<K, Lattice<std::tuple<VectorClock, Lattice<T, Func>>, CausalMerge>>, MapUnion> store;
 
 public:
-  KVStore<K, V>() : store(Lattice(std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>>(), MapUnion{})) { }
-  KVStore<K, V>(std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>> &other) : store(other) { }
+  KVStore<K, T, Func>() : store(Lattice(std::map<K, Lattice<std::tuple<VectorClock, Lattice<T, Func>>, CausalMerge>>(), MapUnion{})) { }
+  KVStore<K, T, Func>(std::map<K, Lattice<std::tuple<VectorClock, Lattice<T, Func>>, CausalMerge>> &other) : store(other) { }
 
-  V get(const K &k) {
-    std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>> store_map = store.reveal();
-    std::tuple<VectorClock, V> value_tuple = store_map.at(k).reveal();
-    return std::get<1>(value_tuple);
+  Lattice<T, Func> get(const K &k) {
+    return get_value((At(store, k)));
   }
 
-  void put(const K &k, std::tuple<VectorClock, V> &v) {
-    std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>> store_map = store.reveal();
-    if (store_map.find(k) != store_map.end())
-        store_map.at(k).merge(v);
-    else {
-        std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>> new_map = { { k, Lattice(v, CausalMerge{}) } };
-        store.merge(new_map);
-    }
+  void put(const K &k, std::tuple<VectorClock, Lattice<T, Func>> &v) {
+    std::map<K, Lattice<std::tuple<VectorClock, Lattice<T, Func>>, CausalMerge>> new_map = { { k, Lattice(v, CausalMerge{}) } };
+    store.merge(new_map);
   }
 
   unsigned size(const K &k) { return store.at(k).size().reveal(); }
