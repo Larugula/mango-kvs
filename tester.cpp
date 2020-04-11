@@ -8,7 +8,7 @@ int main(int argc, char** argv) {
    std::string s1 = "Matthew";
    VectorClock vc1({{"x", Lattice(static_cast<unsigned>(2), Max{})},
                     {"y", Lattice(static_cast<unsigned>(4), Max{})}});
-   Value<int> v1{vc1, 777};
+   std::tuple<VectorClock, int> v1(vc1, 777);
    kvs.put(s1, v1);
    return 0;
 }
