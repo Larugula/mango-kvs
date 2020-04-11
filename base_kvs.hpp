@@ -10,10 +10,7 @@ protected:
   Lattice<std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>>, MapUnion> store;
 
 public:
-  KVStore<K, V>() {
-      std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>> initial_map;
-      store = Lattice(initial_map, MapUnion{});
-  }
+  KVStore<K, V>() : store(Lattice(std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>>(), MapUnion{})) { }
   KVStore<K, V>(std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>> &other) : store(other) { }
 
   V get(const K &k) {
