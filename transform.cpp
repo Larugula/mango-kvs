@@ -35,7 +35,7 @@ Lattice<bool, Or> less_than_or_equal(Lattice<T, Min> l, T n) {
 };
 
 template<typename T>
-Lattice<T, Union> intersect(Lattice<std::set<T>, Union> l_left, Lattice<std::set<T>, Union> l_right) {
+Lattice<T, Union> intersect(Lattice<std::set<T>, Union> l_left, Lattice<std::set<T>,Union> l_right) {
 	std::set<T> l_left_val = l_left.reveal();
 	std::set<T> l_right_val = l_right.reveal();
 	
