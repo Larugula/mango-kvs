@@ -4,13 +4,7 @@
 #include "arugula/include/merges/causal_mrg.hpp"
 #include "arugula/include/merges/tuple_mrg.hpp"
 
-template<typename T>
-struct Value {
-    VectorClock vc;
-    T value;
-};
-
-template <typename K, typename V> 
+template <typename K, typename V>
 class KVStore {
 protected:
   Lattice<std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>>, MapUnion> store;
@@ -25,7 +19,7 @@ public:
   V get(const K &k) {
     std::map<K, Lattice<std::tuple<VectorClock, V>, CausalMerge>> store_map = store.reveal();
     std::tuple<VectorClock, V> value_tuple = store_map.at(k).reveal();
-    return get<1>(value_tuple);
+    return std::get<1>(value_tuple);
   }
 
   void put(const K &k, std::tuple<VectorClock, V> &v) {
