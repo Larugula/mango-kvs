@@ -35,12 +35,16 @@ Lattice<bool, Or> less_than_or_equal(Lattice<T, Min> l, T n) {
 };
 
 template<typename T>
-Lattice<T, Union> intersect(Lattice<T, Union> l_left, Lattice<T, Union> l_right) {
+Lattice<T, Union> intersect(Lattice<std::set<T>, Union> l_left, Lattice<std::set<T>, Union> l_right) {
 	std::set<T> l_left_val = l_left.reveal();
 	std::set<T> l_right_val = l_right.reveal();
-	std::sort(l_left_val.begin(), l_left_val.end());
-	std::sort(l_right_val.begin(), l_right_val.end());
-	//TODO
+	
+	set<T> res;
+	for (auto elem : l_left_val) {
+		if (l_right_val.count(elem))
+			res.insert(elem);
+	}
+	return Lattice<res, Union>;
 };
 
 template<typename K, class T, class Func>
