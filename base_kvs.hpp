@@ -15,7 +15,8 @@ public:
   KVStore<K, T, Func>(std::map<K, Lattice<std::tuple<VectorClock, Lattice<T, Func>>, CausalMerge>> &other) : store(other) { }
 
   Lattice<T, Func> get(const K &k) {
-    return get_value((At(store, k)));
+    //return get_value((At(store, k)));
+      return get_value(store.At<K, Lattice<std::tuple<VectorClock, Lattice<T, Func>>, CausalMerge>>(k));
   }
 
   void put(const K &k, std::tuple<VectorClock, Lattice<T, Func>> &v) {
