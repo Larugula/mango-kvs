@@ -16,7 +16,7 @@ public:
 
   Lattice<T, Func> get(const K &k) {
     //return get_value((At(store, k)));
-      return get_value(store.At<K, Lattice<std::tuple<VectorClock, Lattice<T, Func>>, CausalMerge>>(k));
+      return store.At<K, Lattice<std::tuple<VectorClock, Lattice<T, Func>>, CausalMerge>>(k).get_value<VectorClock, Lattice<T, Func>>();
   }
 
   void put(const K &k, std::tuple<VectorClock, Lattice<T, Func>> &v) {
